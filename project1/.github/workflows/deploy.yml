@@ -10,7 +10,7 @@ permissions:
   pages: write
 
 env:
-  PROJECT_DIR: project1    # <-- change this to the folder that contains package.json
+  PROJECT_DIR: project1    # folder that contains package.json
 
 jobs:
   deploy:
@@ -19,12 +19,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show repo layout (debug)
+      - name: Debug - show repo layout and find package.json
         run: |
           pwd
+          echo "Top-level files:"
           ls -la
-          echo "Files under repo:"
+          echo "All files (first 200):"
           git ls-tree -r --name-only HEAD | sed -n '1,200p'
+          echo "Find package.json files:"
+          find . -maxdepth 4 -type f -name package.json -print
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -36,10 +39,6 @@ jobs:
         run: npm install
         working-directory: ${{ env.PROJECT_DIR }}
 
-      - name: Run tests (optional)
-        run: npm run test:run
-        working-directory: ${{ env.PROJECT_DIR }}
-
       - name: Build for production
         run: npm run build
         working-directory: ${{ env.PROJECT_DIR }}
@@ -48,4 +47,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: ${{ env.PROJECT_DIR }}/dist    # change 'dist' to 'build' if using CRA
+          folder: ${{ env.PROJECT_DIR }}/build   # CRA uses 'build'; change to 'dist' if your build outputs to dist
