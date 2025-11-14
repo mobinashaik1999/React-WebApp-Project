@@ -1,14 +1,16 @@
 name: Deploy React App to GitHub Pages
 
-# Trigger on pushes to main or manually
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
 permissions:
-  contents: read      # allow reading the repo
-  pages: write        # allow writing to Pages branch
+  contents: read
+  pages: write
+
+env:
+  PROJECT_DIR: project1    # <-- change this to the folder that contains package.json
 
 jobs:
   deploy:
@@ -16,6 +18,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Show repo layout (debug)
+        run: |
+          pwd
+          ls -la
+          echo "Files under repo:"
+          git ls-tree -r --name-only HEAD | sed -n '1,200p'
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -25,15 +34,18 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: ${{ env.PROJECT_DIR }}
 
       - name: Run tests (optional)
-        run: npm run test:run  # Only if you have tests configured
+        run: npm run test:run
+        working-directory: ${{ env.PROJECT_DIR }}
 
       - name: Build for production
         run: npm run build
+        working-directory: ${{ env.PROJECT_DIR }}
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages         # The branch to deploy to (GitHub Pages default)
-          folder: dist             # The folder (built site) to deploy
+          branch: gh-pages
+          folder: ${{ env.PROJECT_DIR }}/dist    # change 'dist' to 'build' if using CRA
