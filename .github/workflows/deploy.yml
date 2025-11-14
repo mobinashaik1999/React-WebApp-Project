@@ -1,0 +1,51 @@
+name: Deploy React App to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+
+env:
+  PROJECT_DIR: .    # workflow runs from the repository root which contains package.json
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show repo layout (debug)
+        run: |
+          pwd
+          ls -la
+          echo "Files under repo:"
+          git ls-tree -r --name-only HEAD | sed -n '1,200p'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ${{ env.PROJECT_DIR }}
+
+      - name: Run tests (optional)
+        run: npm test
+        working-directory: ${{ env.PROJECT_DIR }}
+
+      - name: Build for production
+        run: npm run build
+        working-directory: ${{ env.PROJECT_DIR }}
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: ${{ env.PROJECT_DIR }}/build    # CRA outputs to 'build'
