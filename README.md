@@ -47,6 +47,20 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 _Triggered a tiny update to force GitHub Actions redeploy — no functional change._
 
+## Local deploy (optional)
+
+If you want to deploy the built site from your machine as a fallback, install the `gh-pages` package and run the provided deploy script.
+
+PowerShell (Windows):
+
+```
+npm install --save-dev gh-pages
+npm run build
+npm run deploy
+```
+
+This will create a production build and push the `build` folder to the `gh-pages` branch, which GitHub Pages serves.
+
 ### Code Splitting
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
