@@ -37,7 +37,8 @@ jobs:
         working-directory: ${{ env.PROJECT_DIR }}
 
       - name: Run tests (optional)
-        run: npm test
+        run: |
+          CI=true npm test -- --watchAll=false
         working-directory: ${{ env.PROJECT_DIR }}
 
       - name: Build for production
