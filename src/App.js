@@ -1,20 +1,21 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+// App.js
+import { Routes, Route, Link } from "react-router-dom";
 import Home from "./Home";
 import Profiles from "./profiles";
 
 function App() {
   return (
-    <Router basename="/React-WebApp-Project">
+    <div>
       <nav>
-        <Link to="/">Home</Link> | <Link to="/profiles">Profiles</Link>
+        <Link to="/">Home</Link>
+        <br/>
+        <Link to="/profiles">Profiles</Link>
       </nav>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/profiles" element={<Profiles />} />
-        {/* Catch-all route for invalid URLs */}
-        <Route path="*" element={<h2>Page Not Found</h2>} />
       </Routes>
-    </Router>
+    </div>
   );
 }
 
