@@ -21,6 +21,7 @@ function Home() {
     const [selectedOption, setSelectedOption] =
         useState("");
     const [about, setAbout] = useState("");
+    const [error, setError] = useState(null);
 
     const handleSubmit = async(e) => {
         e.preventDefault();
@@ -70,9 +71,13 @@ try {
         setUrl("");
         setSelectedOption("");
         setAbout("");
+        setError("Profile submitted successfully!");
       } else {
-        alert("Error submitting profile");
-      }
+      // parse error JSON from backend
+      const data = await res.json();
+      alert(data.error || "Error submitting profile");
+      setError(data.error || "Error submitting profile");
+    }
     } catch (err) {
       console.error("Error:", err);
       alert("Server error");
@@ -108,6 +113,9 @@ try {
     return (
         <div className="App">
             <h1>Form in React</h1>
+             {error && error.includes("Profile submitted successfully!") ?
+                <div style={{ color: "green" }}>{error}</div> :
+             <div style={{ color: "red" }}>{error}</div>}
             <fieldset>
                 <form action="#" method="get">
                     <label htmlFor="firstname">

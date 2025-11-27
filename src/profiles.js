@@ -2,13 +2,19 @@ import React, { useEffect, useState } from "react";
 
 function Profiles() {
   const [profiles, setProfiles] = useState([]);
+   const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch("http://localhost:5000/api/profiles")
       .then((res) => res.json())
       .then((data) => setProfiles(data))
-      .catch((err) => console.error("Error fetching profiles:", err));
+      .catch((err) =>{ console.error("Error fetching profiles:", err)
+                        setError("Server is not connected");}
+    );
   }, []);
+  if (error) {
+    return <div style={{ color: "red" }}>{error}</div>;
+  }
 
   return (
     <div>
