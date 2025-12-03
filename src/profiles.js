@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 function Profiles() {
   const [profiles, setProfiles] = useState([]);
    const [error, setError] = useState(null);
-
+  const API_BASE_URL = process.env.REACT_APP_API_URL  || "https://react-webapp-project.onrender.com";
   useEffect(() => {
-    fetch("http://localhost:5000/api/profiles")
+    fetch(`${API_BASE_URL}/api/profiles`)
       .then((res) => res.json())
       .then((data) => setProfiles(data))
       .catch((err) =>{ console.error("Error fetching profiles:", err)

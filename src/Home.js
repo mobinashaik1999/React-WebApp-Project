@@ -40,7 +40,10 @@ function Home() {
         // Add your form submission logic here
 
 try {
-      const res = await fetch("http://localhost:5000/api/profile", {
+      const API_BASE_URL = process.env.REACT_APP_API_URL  || "https://react-webapp-project.onrender.com";
+      const res = await fetch(`${API_BASE_URL}/api/profile`,
+    //    fetch("http://localhost:5000/api/profile", 
+    {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({firstName,

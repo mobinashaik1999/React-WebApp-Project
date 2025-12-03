@@ -1,9 +1,17 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
-const port = 5000;
+const express = require("express");
+const cors = require("cors");
 
+const app = express();
+const PORT = process.env.PORT || 5000;
 app.use(cors());
+// ✅ Allow both local dev and GitHub Pages frontend
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "https://mobinashaik1999.github.io"
+  ]
+}));
+
 app.use(express.json());
 
 
@@ -66,6 +74,11 @@ app.get("/api/profiles", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+
+// ✅ Bind to 0.0.0.0 so Render accepts external requests
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });
+// app.listen(port, () => {
+//   console.log(`Server running on http://localhost:${port}`);
+// });
