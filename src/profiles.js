@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-
+const API_BASE_URL = process.env.REACT_APP_API_URL  || "https://react-webapp-project.onrender.com";
 function Profiles() {
   const [profiles, setProfiles] = useState([]);
    const [error, setError] = useState(null);
-  const API_BASE_URL = process.env.REACT_APP_API_URL  || "https://react-webapp-project.onrender.com";
+  
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/profiles`)
       .then((res) => res.json())
