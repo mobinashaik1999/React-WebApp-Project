@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 
@@ -34,9 +36,38 @@ app.use(express.json());
 const pool = require('./db');
 
 // POST endpoint to receive profile data and store in MySQL
-app.post("/api/profile", async (req, res) => {
+app.post("/api/profiles", async (req, res) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    contact,
+    gender,
+    selectedOption,
+    subjects,
+    resume,
+    url,
+    about
+  } = req.body;
+
   try {
-    const {
+    const query = `
+      INSERT INTO profiles (
+        firstName,
+        lastName,
+        email,
+        contact,
+        gender,
+        selectedOption,
+        subjects,
+        resume,
+        url,
+        about
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+      RETURNING *;
+    `;
+
+    const values = [
       firstName,
       lastName,
       email,
@@ -47,48 +78,30 @@ app.post("/api/profile", async (req, res) => {
       resume,
       url,
       about
-    } = req.body;
-
-    const sql = `
-      INSERT INTO profiles
-      (firstName, lastName, email, contact, gender, selectedOption, subjects, resume, url, about)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-
-    const params = [
-      firstName ?? null,
-      lastName ?? null,
-      email ?? null,
-      contact ?? null,
-      gender ?? null,
-      selectedOption ?? null,
-      subjects ? JSON.stringify(subjects) : null,   // ✅ stringify object
-      resume && Object.keys(resume).length > 0 ? JSON.stringify(resume) : null, // ✅ stringify or null
-      url ?? null,
-      about ?? null
     ];
 
-    // console.log("Params:", params); // Debugging
-
-    await pool.query(sql, params);
-    res.status(201).send("Profile created");
+    const result = await pool.query(query, values);
+    res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error("Database error:", err.message);
-    res.status(500).json({ error: err.message });
+    console.error("Error inserting profile:", err);
+    res.status(500).json({ error: "Server error" });
   }
 });
+
+
 
 
 //Get endpoint to check all the profiles stored in the database
 app.get("/api/profiles", async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM profiles");
-    res.json(rows);
+    const result = await pool.query("SELECT * FROM profiles");
+    res.json(result.rows);
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching profiles:", err);
     res.status(500).send("Server error");
   }
 });
+
 
 
 // ✅ Bind to 0.0.0.0 so Render accepts external requests

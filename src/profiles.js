@@ -35,7 +35,7 @@ function Profiles() {
           {profiles.map((profile) => (
             <tr key={profile.id}>
               <td>{profile.id}</td>
-              <td>{profile.firstName + profile.lastName}</td>
+              <td>{profile.firstname + profile.lastname || ""}</td>
               <td>{profile.email}</td>
               <td>{profile.contact}</td>
               <td>{profile.gender}</td>

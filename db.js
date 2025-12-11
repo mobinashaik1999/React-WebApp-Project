@@ -1,11 +1,16 @@
-const mysql = require('mysql2/promise');
+const { Pool } = require("pg");
 
-const pool = mysql.createPool({
-  host: '127.0.0.1',
-  user: 'root',
-  password: 'Innu@2025',   // replace with your root password
-  database: 'react_app_db',
-  port: 3306
+const isProduction = process.env.NODE_ENV === "production";
+
+const pool = new Pool({
+  host: process.env.PGHOST,
+  port: process.env.PGPORT || 5432,
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+  database: process.env.PGDATABASE,
+   ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 module.exports = pool;

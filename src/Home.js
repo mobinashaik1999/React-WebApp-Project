@@ -41,7 +41,7 @@ function Home() {
 
 try {
       const API_BASE_URL = process.env.REACT_APP_API_URL  || "https://react-webapp-project.onrender.com";
-      const res = await fetch(`${API_BASE_URL}/api/profile`,
+      const res = await fetch(`${API_BASE_URL}/api/profiles`, 
     //    fetch("http://localhost:5000/api/profile", 
     {
         method: "POST",
